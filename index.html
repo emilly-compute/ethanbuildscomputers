@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .component-list {
+      margin-top: 20px;
+    }
+    .component-list ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .component-list li {
+      margin: 5px 0;
+    }
+    .total-price {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Build Your PC</h1>
+
+  <label for="budget">Enter Your Budget ($):</label>
+  <input type="number" id="budget" min="100" step="50">
+  <button onclick="suggestComponents()">Suggest Components</button>
+  <br><br>
+
+  <label for="cpu">CPU:</label>
+  <select id="cpu">
+    <option value="">Select CPU</option>
+  </select><br>
+
+  <label for="gpu">GPU:</label>
+  <select id="gpu">
+    <option value="">Select GPU</option>
+  </select><br>
+
+  <label for="ram">RAM:</label>
+  <select id="ram">
+    <option value="">Select RAM</option>
+  </select><br>
+
+  <label for="storage">Storage (Select multiple):</label>
+  <select id="storage" multiple>
+    <option value="">Select Storage</option>
+  </select><br>
+
+  <label for="power-supply">Power Supply:</label>
+  <select id="power-supply">
+    <option value="">Select Power Supply</option>
+  </select><br>
+
+  <label for="case">Case:</label>
+  <select id="case">
+    <option value="">Select Case</option>
+  </select><br>
+
+  <label for="motherboard">Motherboard:</label>
+  <select id="motherboard">
+    <option value="">Select Motherboard</option>
+  </select><br>
+
+  <label for="cpu-cooler">CPU Cooler:</label>
+  <select id="cpu-cooler">
+    <option value="">Select CPU Cooler</option>
+  </select><br>
+
+  <div class="component-list">
+    <h3>Selected Components:</h3>
+    <ul id="selected-components"></ul>
+  </div>
+
+  <div class="total-price">
+    Total Price: $<span id="total-price">0</span>
+  </div>
+
+  <script>
+    function suggestComponents() {
+      const budget = parseFloat(document.getElementById('budget').value);
+      if (isNaN(budget) || budget < 100) {
+        alert("Please enter a valid budget of at least $100.");
+        return;
+      }
+
+      const components = {
+        cpu: [['Budget CPU', 150], ['Mid-Range CPU', 300], ['High-End CPU', 500]],
+        gpu: [['Budget GPU', 200], ['Mid-Range GPU', 500], ['High-End GPU', 1000]],
+        ram: [['8GB RAM', 50], ['16GB RAM', 100], ['32GB RAM', 180]],
+        storage: [['256GB SSD', 40], ['512GB SSD', 70], ['1TB SSD', 120]],
+        powerSupply: [['500W PSU', 50], ['750W PSU', 80], ['1000W PSU', 150]],
+        case: [['Basic Case', 60], ['Gaming Case', 120]],
+        motherboard: [['Budget Motherboard', 100], ['High-End Motherboard', 250]],
+        cpuCooler: [['Stock Cooler', 30], ['Liquid Cooler', 120]]
+      };
+
+      let remainingBudget = budget;
+      let selected = {};
+
+      Object.keys(components).forEach(category => {
+        for (let i = components[category].length - 1; i >= 0; i--) {
+          if (remainingBudget >= components[category][i][1]) {
+            selected[category] = components[category][i];
+            remainingBudget -= components[category][i][1];
+            break;
+          }
+        }
+      });
+
+      document.getElementById('cpu').value = selected.cpu[0] || "";
+      document.getElementById('gpu').value = selected.gpu[0] || "";
+      document.getElementById('ram').value = selected.ram[0] || "";
+      document.getElementById('storage').value = selected.storage[0] || "";
+      document.getElementById('power-supply').value = selected.powerSupply[0] || "";
+      document.getElementById('case').value = selected.case[0] || "";
+      document.getElementById('motherboard').value = selected.motherboard[0] || "";
+      document.getElementById('cpu-cooler').value = selected.cpuCooler[0] || "";
+
+      updateSelectedComponents();
+    }
+  </script>
+</body>
+</html>
